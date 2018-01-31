@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const DataService = require('../service/cryptoCompare')
 
 const HoldingObj = {
     symbol: { 
@@ -29,7 +28,11 @@ const PortfolioObj = {
     required: true,
     toLowerCase: true
   },
-  value: {
+  totalValue: {
+    type: Number,
+    default: 0
+  },
+  totalCoins: {
     type: Number,
     default: 0
   },
@@ -39,15 +42,9 @@ const PortfolioObj = {
 const HoldingSchema = new Schema(HoldingObj)
 const PortfolioSchema = new Schema(PortfolioObj)
 
-PortfolioSchema.query.byHolding = function(id, symbol) {
-  return this.find({_id: id}, {
-    "holdings": {
-      $elemMatch: {
-        symbol: symbol
-      }
-    }
-  })
-}
+// PortfolioSchema.query.byHolding = function(id, symbol) {
+//   return 
+// }
 
 const Holding = mongoose.model("Holding", HoldingSchema);
 const Portfolio = mongoose.model("Portfolio", PortfolioSchema);

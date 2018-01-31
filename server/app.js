@@ -17,20 +17,17 @@ const expressValidator = require('express-validator');
 const expressStatusMonitor = require('express-status-monitor');
 const sass = require('node-sass-middleware');
 const querystring = require('querystring');
+const portfolioRouter = require('./routes/portfolio')
 
-/**
- * Load environment variables from .env file, where API keys and passwords are configured.
- */
 dotenv.load({ path: '.env' });
 /**
  * Controllers (route handlers).
  */
-// const apiController = require('./controllers/api');
+// const portfolioController = require('./controllers/api/holding');
 /**
  * Create Express server.
  */
 const app = express();
-
 /**
  * Connect to MongoDB.
  */
@@ -75,7 +72,7 @@ app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }))
 /**
  * Primary app routes.
  */
-
+app.use('/', portfolioRouter)
 /**
  * Error Handler.
  */

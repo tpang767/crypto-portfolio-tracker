@@ -17,20 +17,21 @@ const expressValidator = require('express-validator');
 const expressStatusMonitor = require('express-status-monitor');
 const sass = require('node-sass-middleware');
 const querystring = require('querystring');
-const portfolioRouter = require('./routes/portfolio')
-
+const cors = require('cors');
+const asyncHandler = require("express-async-handler");
+const PortfolioController = require('./controllers/portfolio')
+const HoldingsController = require('./controllers/holdings')
+const ProfilesController = require('./controllers/profiles')
 dotenv.load({ path: '.env' });
-/**
- * Controllers (route handlers).
- */
-// const portfolioController = require('./controllers/api/holding');
 /**
  * Create Express server.
  */
 const app = express();
+
 /**
  * Connect to MongoDB.
  */
+
 mongoose.Promise = global.Promise
 mongoose.connect(process.env.MONGODB_URI || process.env.MONGOLAB_URI, { useMongoClient: true })
 mongoose.connection.on('error', (err) => {
@@ -42,6 +43,7 @@ mongoose.connection.on('error', (err) => {
 /**
  * Express configuration.
  */
+
 app.set('host', process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0');
 app.set('port', process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080);
 app.set('views', path.join(__dirname, 'views'));
@@ -66,16 +68,32 @@ app.use(session({
     clear_interval: 3600
   })
 }));
+app.use(cors())
 app.use(flash());
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
 
 /**
  * Primary app routes.
  */
-app.use('/', portfolioRouter)
+app.get('/portfolio', PortfolioController.getPortfolio)
+app.post('/portfolio', PortfolioController.createPortfolio)
+app.get('/portfolio/:id', PortfolioController.getPortfolioById)
+app.put('/portfolio/:id', PortfolioController.updatePortfolio)
+app.delete('/portfolio/:id', PortfolioController.deletePortfolio)
+
+
+app.get('/portfolio/:id/holdings', HoldingsController.getHoldings)
+app.get('/portfolio/:id/holdings/:symbol', HoldingsController.getHoldingById)
+app.post('/portfolio/:id/holdings', HoldingsController.postHolding)
+app.put('/portfolio/:id/holdings', HoldingsController.updateHolding)
+app.delete('/portfolio/:id/holdings', HoldingsController.deleteHolding)
+
+app.get('/service/profiles', ProfilesController.getProfiles)
+app.post('/service/profiles', ProfilesController.postProfiles)
 /**
  * Error Handler.
  */
+
 app.use(errorHandler());
 
 /**

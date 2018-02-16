@@ -44,13 +44,15 @@ const holding = result[0].holdings[0]
 
 exports.postHolding = asyncHandler(async (req, res, next) => {
 	
-	const symbol = req.body.holding.symbol
-	const amount = req.body.holding.amount
-
+	const symbol = req.body.symbol
+	const amount = req.body.amount
+	const coinProfile = await Profile.findOne({
+		symbol: symbol
+	})
 	const price = await ApiService.getPrice(symbol)
 	const marketValue = amount * price
 	const holding = {
-            name: profile[0]['name'],
+            coinName: coinProfile.name,
 		symbol: symbol,
 		amount: amount,
 		price: price,
@@ -65,7 +67,6 @@ exports.postHolding = asyncHandler(async (req, res, next) => {
 		},
 		{ new: true }
 	)
-
 	res.status(200).json(insert)
 })
 
@@ -85,7 +86,7 @@ exports.updateHolding = asyncHandler(async (req, res, next) => {
 			_id: req.params.id,
 			holdings: {
 				$elemMatch: {
-					symbol: req.body.update.symbol
+					symbol: req.body.symbol
 				}
 			}
 		},
@@ -111,7 +112,7 @@ exports.deleteHolding = asyncHandler(async (req, res, next) => {
 		{
 			$pull: {
 				holdings: {
-					symbol: req.body.delete.symbol
+					symbol: req.body.symbol
 				}
 			}
 		}

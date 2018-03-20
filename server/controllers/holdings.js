@@ -75,11 +75,9 @@ exports.postHolding = asyncHandler(async (req, res, next) => {
  */
 
 exports.updateHolding = asyncHandler(async (req, res, next) => {
-	const amount = req.body.update.amount
-	const price = await ApiService.getPrice(req.body.update.symbol)
+	const amount = req.body.amount
+	const price = await ApiService.getPrice(req.body.symbol)
 	const marketValue = amount * price
-	
-
 
       const update = await Portfolio.update(
 		{

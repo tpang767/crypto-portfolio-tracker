@@ -43,11 +43,11 @@ export default {
       },
       async updateHolding(holding) {
             const url = 'http://localhost:8080/portfolio/5a7eb5a966413b6d0576b59b/holdings'
-            const update = await axios.put(url, {
-                  data: holding
-            })
-
-            return true         
+            
+            const update = await axios.put(url, holding)
+            if(update) {
+                  return true         
+            }
       }
 }
 

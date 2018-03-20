@@ -15,11 +15,9 @@
 </template>
 
 <script>
-import AppNav from './components/AppNav'
-import AppFooter from './components/AppFooter'
-import AppSide from './components/AppSide'
-// import HoldingList from '@/components/HoldingList'
-// import { EventBus } from './'
+import AppNav from './components/partials/AppNav'
+import AppFooter from './components/partials/AppFooter'
+import AppSide from './components/partials/AppSide'
 
 export default {
   name: 'app',
@@ -27,8 +25,6 @@ export default {
     AppNav,
     AppSide,
     AppFooter
-    // SideNav,
-    // HoldingList
   }
 }
 </script>
